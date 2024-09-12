@@ -440,11 +440,11 @@ impl GlfwBackend {
                     Some(emb)
                 }
                 // we scroll 25 pixels at a time
-                //   glfw::WindowEvent::Scroll(x, y) => Some(Event::MouseWheel {
-                //       delta: [x as f32 * 25.0, y as f32 * 25.0].into(),
-                //       modifiers: glfw_to_egui_modifers(m),
-                //       unit: egui::MouseWheelUnit::Point,
-                //    }),
+                glfw::WindowEvent::Scroll(x, y) => Some(Event::MouseWheel {
+                    delta: [x as f32 * 25.0, y as f32 * 25.0].into(),
+                    modifiers: egui::Modifiers::default(),
+                    unit: egui::MouseWheelUnit::Point,
+                }),
                 glfw::WindowEvent::Key(k, scancode, a, m) => match k {
                     glfw::Key::C => {
                         if glfw_to_egui_action(a).unwrap_or_default()
