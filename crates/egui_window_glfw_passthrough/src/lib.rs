@@ -488,7 +488,7 @@ impl GlfwBackend {
                         key,
                         pressed: pressed.unwrap_or_default(),
                         modifiers: glfw_to_egui_modifers(m),
-                        repeat: false,
+                        repeat: a == glfw::Action::Repeat,
                         // glfw's keys have always been independent of layout
                         // if you need the key from the current layotu
                         physical_key: layout_independent_glfw_to_egui_key(k),
@@ -583,7 +583,27 @@ impl GlfwBackend {
                 }
                 _ => None,
             } {
-                self.raw_input.events.push(ev);
+                if let Event::Key {
+                    key: k,
+                    pressed: p,
+                    repeat: r,
+                    ..
+                } = &ev
+                {
+                    if *k == Key::Backspace && *r {
+                        self.raw_input.events.push(Event::Key {
+                            key: Key::Backspace,
+                            pressed: true,
+                            modifiers: egui::Modifiers::default(),
+                            repeat: false,
+                            physical_key: Some(Key::Backspace),
+                        });
+                    } else {
+                        self.raw_input.events.push(ev);
+                    }
+                } else {
+                    self.raw_input.events.push(ev);
+                }
             }
         }
 

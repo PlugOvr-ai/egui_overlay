@@ -20,11 +20,15 @@ fn main() {
         )
         .init();
 
-    egui_overlay::start(HelloWorld { frame: 0 });
+    egui_overlay::start(HelloWorld {
+        frame: 0,
+        text: String::new(),
+    });
 }
 
 pub struct HelloWorld {
     pub frame: u64,
+    pub text: String,
 }
 impl EguiOverlay for HelloWorld {
     fn gui_run(
@@ -44,6 +48,7 @@ impl EguiOverlay for HelloWorld {
                 glfw_backend.window.set_decorated(borders);
             }
 
+            ui.text_edit_singleline(&mut self.text);
             ui.label(format!(
                 "pixels_per_virtual_unit: {}",
                 glfw_backend.physical_pixels_per_virtual_unit
@@ -121,13 +126,13 @@ impl EguiOverlay for HelloWorld {
         });
 
         // here you decide if you want to be passthrough or not.
-        if egui_context.wants_pointer_input() || egui_context.wants_keyboard_input() {
+        /* if egui_context.wants_pointer_input() || egui_context.wants_keyboard_input() {
             // we need input, so we need the window to be NOT passthrough
             glfw_backend.set_passthrough(false);
         } else {
             // we don't care about input, so the window can be passthrough now
             glfw_backend.set_passthrough(true)
         }
-        egui_context.request_repaint();
+        egui_context.request_repaint();*/
     }
 }
