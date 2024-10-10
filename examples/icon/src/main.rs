@@ -1,12 +1,14 @@
 #![windows_subsystem = "windows"] // to turn off console.
 
 use egui_overlay::EguiOverlay;
+#[cfg(feature = "glow")]
+use egui_render_glow::GlowBackend as DefaultGfxBackend;
 #[cfg(feature = "three_d")]
 use egui_render_three_d::ThreeDBackend as DefaultGfxBackend;
 #[cfg(feature = "wgpu")]
 use egui_render_wgpu::WgpuBackend as DefaultGfxBackend;
 
-#[cfg(not(any(feature = "three_d", feature = "wgpu")))]
+#[cfg(not(any(feature = "three_d", feature = "wgpu", feature = "glow")))]
 compile_error!("you must enable either `three_d` or `wgpu` feature to run this example");
 fn main() {
     use tracing_subscriber::{fmt, prelude::*, EnvFilter};

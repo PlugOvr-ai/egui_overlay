@@ -1,6 +1,8 @@
 use std::time::Duration;
 
 use egui::{Context, PlatformOutput};
+#[cfg(feature = "glow")]
+use egui_render_glow::GlowBackend as DefaultGfxBackend;
 #[cfg(feature = "three_d")]
 pub use egui_render_three_d;
 #[cfg(feature = "three_d")]
@@ -43,6 +45,16 @@ pub fn start<T: EguiOverlay + 'static>(user_data: T) {
     let default_gfx_backend = {
         DefaultGfxBackend::new(
             egui_render_three_d::ThreeDConfig {
+                ..Default::default()
+            },
+            |s| glfw_backend.get_proc_address(s),
+            latest_size,
+        )
+    };
+    #[cfg(feature = "glow")]
+    let default_gfx_backend = {
+        DefaultGfxBackend::new(
+            egui_render_glow::GlowConfig {
                 ..Default::default()
             },
             |s| glfw_backend.get_proc_address(s),

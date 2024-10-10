@@ -8,7 +8,8 @@ description = "shows how we can set a window icon"
 publish = false
 
 [features]
-default = ["three_d"]
+default = ["glow"]
+glow = ["dep:egui_render_glow", "egui_overlay/glow"]
 three_d = ["dep:egui_render_three_d", "egui_overlay/three_d"]
 wgpu = ["dep:egui_render_wgpu", "egui_overlay/wgpu"]
 
@@ -22,4 +23,5 @@ egui_overlay = { workspace = true, default-features = false, features = [
 egui_window_glfw_passthrough = { workspace = true, features = ["image"] }
 egui_render_three_d = { workspace = true, optional = true }
 egui_render_wgpu = { workspace = true, optional = true }
+egui_render_glow = { workspace = true, optional = true }
 image = { version = "0" }
