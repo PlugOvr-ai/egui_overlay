@@ -8,9 +8,10 @@ description = "A basic example that shows how we can use egui_overlay crate"
 publish = false
 
 [features]
-default = ["three_d"]
+default = ["glow"]
 three_d = ["dep:egui_render_three_d", "egui_overlay/three_d"]
 wgpu = ["dep:egui_render_wgpu", "egui_overlay/wgpu"]
+glow = ["dep:egui_render_glow", "egui_overlay/glow"]
 
 [dependencies]
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
@@ -19,3 +20,4 @@ egui_overlay = { workspace = true, default-features = false, features = ["egui_d
 egui_window_glfw_passthrough = { workspace = true }
 egui_render_three_d = { workspace = true, optional = true }
 egui_render_wgpu = { workspace = true, optional = true }
+egui_render_glow = { workspace = true, optional = true }
