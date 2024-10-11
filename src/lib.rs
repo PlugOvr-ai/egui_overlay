@@ -2,6 +2,8 @@ use std::time::Duration;
 
 use egui::{Context, PlatformOutput};
 #[cfg(feature = "glow")]
+pub use egui_render_glow;
+#[cfg(feature = "glow")]
 use egui_render_glow::GlowBackend as DefaultGfxBackend;
 #[cfg(feature = "three_d")]
 pub use egui_render_three_d;
