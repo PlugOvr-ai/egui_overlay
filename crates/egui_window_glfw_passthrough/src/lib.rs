@@ -108,6 +108,12 @@ impl GlfwBackend {
     pub fn new(config: GlfwConfig) -> Self {
         let mut glfw_context = glfw::init(glfw::log_errors).expect("failed to create glfw context");
         glfw_context.window_hint(WindowHint::ScaleToMonitor(true));
+        #[cfg(target_os = "macos")]
+        {
+            glfw_context.window_hint(WindowHint::OpenGlForwardCompat(true));
+            glfw_context.window_hint(WindowHint::OpenGlProfile(OpenGlProfileHint::Core));
+            glfw_context.window_hint(WindowHint::ContextVersion(4, 1));
+        }
 
         let GlfwConfig {
             window_title,
