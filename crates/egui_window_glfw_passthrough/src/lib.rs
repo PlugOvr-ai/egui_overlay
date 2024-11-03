@@ -114,7 +114,7 @@ impl GlfwBackend {
         #[cfg(target_os = "macos")]
         {
             glfw_context.window_hint(WindowHint::OpenGlForwardCompat(true));
-            glfw_context.window_hint(WindowHint::OpenGlProfile(OpenGlProfileHint::Core));
+            glfw_context.window_hint(WindowHint::OpenGlProfile(glfw::OpenGlProfileHint::Core));
             glfw_context.window_hint(WindowHint::ContextVersion(4, 1));
         }
 
