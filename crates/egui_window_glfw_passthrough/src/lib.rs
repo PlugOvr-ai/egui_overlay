@@ -109,7 +109,7 @@ impl Default for GlfwConfig {
 
 impl GlfwBackend {
     pub fn new(config: GlfwConfig) -> Self {
-        glfw::init_hint(glfw::InitHint::CocoaMenubar(false));
+        //glfw::init_hint(glfw::InitHint::CocoaMenubar(false));
         let mut glfw_context = glfw::init(glfw::log_errors).expect("failed to create glfw context");
         glfw_context.window_hint(WindowHint::ScaleToMonitor(true));
         #[cfg(target_os = "macos")]
