@@ -1,15 +1,15 @@
 //! This crate uses `glfw-passthrough` crate as a window backend for egui.
 
-use egui::{Event, Key, PointerButton, Pos2, RawInput};
+use egui::{Event, Key, MouseWheelUnit, PointerButton, Pos2, RawInput};
 use egui::{ViewportEvent, ViewportId, ViewportInfo};
 pub use glfw;
-use glfw::Action;
 use glfw::ClientApiHint;
 use glfw::Context;
 use glfw::Glfw;
 use glfw::StandardCursor;
 use glfw::WindowEvent;
 use glfw::WindowHint;
+use glfw::{Action, Modifiers};
 use tracing::info;
 /// This is the window backend for egui using [`glfw`]
 /// You can configure most of it at startup using [`GlfwConfig`].
@@ -35,9 +35,6 @@ use tracing::info;
 /// So, we will use glfw's physical pixel size and "emulate" logical points to match the egui expectations.
 ///
 pub struct GlfwBackend {
-    pub glfw: glfw::Glfw,
-    pub events_receiver: glfw::GlfwReceiver<(f64, WindowEvent)>,
-    pub window: glfw::PWindow,
     /// in virtual units
     pub window_size_virtual: [u32; 2],
     /// in logical points
@@ -56,11 +53,17 @@ pub struct GlfwBackend {
     /// in logical points
     pub cursor_pos: [f32; 2],
     pub cursor_inside_bounds: bool,
+    pub modifiers: glfw::Modifiers,
     pub title: String,
     pub focused: bool,
     /// if the window is mouse_passthrough or not.
     /// We cache this, to avoid redundant calls to [glfw::Window::set_mouse_passthrough]
     pub passthrough: bool,
+    // #[cfg(feature = "wayland")]
+    // pub input_region: wayland_client::protocol::wl_region::WlRegion,
+    pub events_receiver: glfw::GlfwReceiver<(f64, WindowEvent)>,
+    pub window: glfw::PWindow,
+    pub glfw: glfw::Glfw,
 }
 impl Drop for GlfwBackend {
     fn drop(&mut self) {
@@ -246,6 +249,7 @@ impl GlfwBackend {
         "
         );
         let pass = window.is_mouse_passthrough();
+
         Self {
             glfw: glfw_context,
             events_receiver,
@@ -267,6 +271,7 @@ impl GlfwBackend {
             window_position,
             title: window_title,
             focused: focus,
+            modifiers: Modifiers::empty(),
             passthrough: pass,
         }
     }
@@ -435,6 +440,7 @@ impl GlfwBackend {
                     None
                 }
                 glfw::WindowEvent::MouseButton(mb, a, m) => {
+                    self.modifiers = m;
                     let emb = Event::PointerButton {
                         pos: Pos2 {
                             x: self.cursor_pos[0],
@@ -447,11 +453,9 @@ impl GlfwBackend {
                     Some(emb)
                 }
                 // we scroll 25 pixels at a time
-                glfw::WindowEvent::Scroll(x, y) => Some(Event::MouseWheel {
-                    delta: [x as f32 * 25.0, y as f32 * 25.0].into(),
-                    modifiers: egui::Modifiers::default(),
-                    unit: egui::MouseWheelUnit::Point,
-                }),
+                glfw::WindowEvent::Scroll(x, y) => {
+                    Some(Event::Scroll([x as f32 * 25.0, y as f32 * 25.0].into()))
+                }
                 glfw::WindowEvent::Key(k, scancode, a, m) => match k {
                     glfw::Key::C => {
                         if glfw_to_egui_action(a).unwrap_or_default()

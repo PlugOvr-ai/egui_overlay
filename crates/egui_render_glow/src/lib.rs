@@ -221,7 +221,7 @@ impl Painter {
             let egui_program = create_program_from_src(
                 gl,
                 EGUI_VS,
-                if cfg!(wasm32) {
+                if cfg!(target_arch = "wasm32") {
                     // on wasm, we always assume srgb framebuffer
                     EGUI_LINEAR_OUTPUT_FS
                 } else {
