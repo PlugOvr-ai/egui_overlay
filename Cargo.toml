@@ -22,10 +22,10 @@ raw-window-handle = { workspace = true }
 egui_render_three_d = { version = "0.9", path = "crates/egui_render_three_d", optional = true }
 # because opengl doesn't work on mac :((
 egui_render_wgpu = { version = "0.9", path = "crates/egui_render_wgpu", optional = true }
-
+egui_render_glow = { version = "0.9", path = "crates/egui_render_glow", optional = true }
 
 [workspace.dependencies]
-egui = { version = "0.29", default-features = false }
+egui = { version = "0.31", default-features = false }
 bytemuck = { version = "1", default-features = false }
 tracing = { version = "0.1", default-features = false }
 raw-window-handle = { version = "0.6" }
